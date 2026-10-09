@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 
@@ -19,6 +18,15 @@ ALLOWED_HOSTS = [
         "127.0.0.1,localhost,testserver"
     ).split(",")
     if host.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        "CSRF_TRUSTED_ORIGINS",
+        "https://clockingsystememployees.onrender.com"
+    ).split(",")
+    if origin.strip()
 ]
 
 # Installed applications
@@ -44,7 +52,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# URL configuration
 ROOT_URLCONF = "clocking_project.urls"
 
 # Templates
@@ -64,11 +71,9 @@ TEMPLATES = [
     },
 ]
 
-# WSGI application
 WSGI_APPLICATION = "clocking_project.wsgi.application"
 
 # Database
-# SQLite is suitable for local development.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -107,11 +112,11 @@ STORAGES = {
     },
 }
 
-# Media files and uploaded employee photos
+# Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Default primary key field
+# Default primary key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Login and logout redirects
