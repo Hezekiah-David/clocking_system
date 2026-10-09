@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ClockWise{% endblock %} | Plateau State Polytechnic</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --ink:#0f172a; --muted:#64748b; --blue:#0c5cab; --green:#059669; --line:#e2e8f0; --wash:#f8fafc; }
+    body { background:var(--wash); color:var(--ink); font-family:Inter,system-ui,sans-serif; }
+    .app-nav { background:#0f172a; }
+    .brand { color:#fff; font-weight:800; letter-spacing:.01em; }
+    .brand small { display:block; color:#94a3b8; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; }
+    .shell { max-width:1180px; margin:0 auto; padding:7rem 1.25rem 3rem; }
+    .panel { background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 24px rgba(15,23,42,.05); }
+    .panel-header { padding:1.25rem 1.5rem; border-bottom:1px solid var(--line); }
+    .panel-body { padding:1.5rem; }
+    .eyebrow { color:var(--blue); font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .metric { padding:1.25rem; border-left:4px solid var(--blue); }
+    .metric.green { border-left-color:var(--green); } .metric.amber { border-left-color:#d97706; } .metric.red { border-left-color:#dc2626; }
+    .metric-value { font-size:2rem; font-weight:800; line-height:1; } .metric-label { color:var(--muted); font-size:.8rem; margin-top:.45rem; }
+    .clock-face { background:linear-gradient(145deg,#0f172a,#163c67); color:#fff; border-radius:12px; padding:2rem; text-align:center; }
+    .clock-time { font-size:clamp(2.2rem,6vw,4rem); font-weight:800; letter-spacing:.02em; }
+    .btn-primary { background:var(--blue); border-color:var(--blue); } .btn-success { background:var(--green); border-color:var(--green); }
+    .table th { color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
+    .badge-present { background:#dcfce7; color:#166534; } .badge-late { background:#fef3c7; color:#92400e; }
+    .nav-link { color:#cbd5e1; } .nav-link:hover { color:#fff; }
+    .message-stack { position:fixed; top:5rem; right:1rem; z-index:5; max-width:360px; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg app-nav fixed-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand brand" href="{% url 'dashboard' %}">ClockWise<small>Employee Clocking System</small></a>
+      {% if request.user.is_authenticated %}
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#mainMenu"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="mainMenu">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          {% if request.user.is_superuser or request.user.employee.role == 'admin' %}
+          <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+          <a class="nav-link" href="{% url 'employee_list' %}">Employees</a>
+          <a class="nav-link" href="{% url 'attendance_records' %}">Attendance</a>
+          <a class="nav-link" href="{% url 'report' %}">Reports</a>
+          <a class="nav-link" href="{% url 'admin:index' %}">Django Admin</a>
+          {% endif %}
+          <a class="btn btn-outline-light btn-sm ms-lg-2" href="{% url 'logout' %}"><i class="fas fa-right-from-bracket me-1"></i> Logout</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </nav>
+  {% if messages %}<div class="message-stack">{% for message in messages %}<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} shadow-sm">{{ message }}</div>{% endfor %}</div>{% endif %}
+  <main class="shell">{% block content %}{% endblock %}</main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

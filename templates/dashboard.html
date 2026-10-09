@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"><div><div class="eyebrow">Employee Dashboard</div><h1 class="h2 fw-bold mb-1">Welcome, {{ employee.display_name }}</h1><p class="text-secondary mb-0">{{ employee.staff_no }} · {{ employee.department }} · {{ employee.designation }}</p></div><a class="btn btn-outline-secondary" href="{% url 'logout' %}">Logout</a></div>
+<div id="dashboardImages" class="carousel slide panel overflow-hidden mb-4" data-bs-ride="carousel" data-bs-interval="5000">
+  <div class="carousel-indicators"><button type="button" data-bs-target="#dashboardImages" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Dashboard image 1"></button><button type="button" data-bs-target="#dashboardImages" data-bs-slide-to="1" aria-label="Dashboard image 2"></button></div>
+  <div class="carousel-inner"><div class="carousel-item active"><img src="https://i.imgur.com/cq6GQU2.jpeg" class="d-block w-100" style="height:260px;object-fit:cover" alt="Plateau State Polytechnic campus"></div><div class="carousel-item"><img src="https://i.imgur.com/Dd4adSy.jpeg" class="d-block w-100" style="height:260px;object-fit:cover" alt="Employee clocking system"></div></div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#dashboardImages" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
+  <button class="carousel-control-next" type="button" data-bs-target="#dashboardImages" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>
+</div>
+<div class="row g-4 mb-4">
+  <div class="col-lg-7"><div class="clock-face"><div class="small text-white-50 text-uppercase">Current time</div><div class="clock-time" id="clock">{{ now|date:'H:i:s' }}</div><div id="todayDate">{{ now|date:'l, d F Y' }}</div><div class="d-flex justify-content-center gap-2 mt-4"><button class="btn btn-success" type="button" data-clock-action="{% url 'clock_in' %}" data-action-label="Clock in" data-bs-toggle="modal" data-bs-target="#faceCheckModal" {% if today_record %}disabled{% endif %}><i class="fas fa-arrow-right-to-bracket me-2"></i>Clock In</button><button class="btn btn-outline-light" type="button" data-clock-action="{% url 'clock_out' %}" data-action-label="Clock out" data-bs-toggle="modal" data-bs-target="#faceCheckModal" {% if not today_record or today_record.clock_out_time %}disabled{% endif %}><i class="fas fa-arrow-right-from-bracket me-2"></i>Clock Out</button></div></div></div>
+  <div class="col-lg-5"><div class="panel h-100"><div class="panel-header"><div class="eyebrow">Today's record</div><h2 class="h5 mb-0">Attendance status</h2></div><div class="panel-body"><dl class="row mb-0"><dt class="col-6 text-secondary">Clock in</dt><dd class="col-6 text-end">{% if today_record %}{{ today_record.clock_in_time|date:'h:i A' }}{% else %}--{% endif %}</dd><dt class="col-6 text-secondary">Clock out</dt><dd class="col-6 text-end">{% if today_record.clock_out_time %}{{ today_record.clock_out_time|date:'h:i A' }}{% else %}--{% endif %}</dd><dt class="col-6 text-secondary">Status</dt><dd class="col-6 text-end">{% if today_record %}<span class="badge {% if today_record.status == 'late' %}badge-late{% else %}badge-present{% endif %}">{{ today_record.get_status_display }}</span>{% else %}Not clocked in{% endif %}</dd></dl></div></div></div>
+</div>
+<div class="panel"><div class="panel-header"><div class="eyebrow">My attendance</div><h2 class="h5 mb-0">Recent attendance history</h2></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Status</th></tr></thead><tbody>{% for record in history %}<tr><td>{{ record.attendance_date|date:'d/m/Y' }}</td><td>{{ record.clock_in_time|date:'h:i A' }}</td><td>{% if record.clock_out_time %}{{ record.clock_out_time|date:'h:i A' }}{% else %}--{% endif %}</td><td><span class="badge {% if record.status == 'late' %}badge-late{% else %}badge-present{% endif %}">{{ record.get_status_display }}</span></td></tr>{% empty %}<tr><td colspan="4" class="text-center text-secondary py-4">No attendance records yet.</td></tr>{% endfor %}</tbody></table></div></div>
+<div class="modal fade" id="faceCheckModal" tabindex="-1" aria-labelledby="faceCheckTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+    <form id="faceCheckForm" method="post" action="">
+      {% csrf_token %}
+      <div class="modal-header"><h2 class="modal-title h5" id="faceCheckTitle">Confirm staff details</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+      <div class="modal-body">
+        <p class="text-secondary" id="faceActionPrompt">Verify your profile and capture a face photo to continue.</p>
+        <dl class="row mb-3"><dt class="col-4">Name</dt><dd class="col-8">{{ employee.display_name }}</dd><dt class="col-4">Staff no.</dt><dd class="col-8">{{ employee.staff_no }}</dd><dt class="col-4">Department</dt><dd class="col-8">{{ employee.department }}</dd></dl>
+        <video id="faceCamera" class="w-100 rounded bg-dark" style="aspect-ratio:4/3;object-fit:cover" autoplay playsinline aria-label="Live camera preview"></video>
+        <canvas id="faceCanvas" class="d-none"></canvas><input id="faceImage" name="face_image" type="hidden" required>
+        <div class="d-flex justify-content-between align-items-center gap-2 mt-3"><span id="cameraStatus" class="small text-secondary" role="status">Starting camera...</span><button id="captureFace" class="btn btn-outline-primary btn-sm" type="button" disabled><i class="fas fa-camera me-1"></i>Capture photo</button></div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button><button id="submitClockAction" class="btn btn-primary" type="submit" disabled>Continue</button></div>
+    </form>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+setInterval(function(){const now=new Date();document.getElementById('clock').textContent=now.toLocaleTimeString('en-GB');document.getElementById('todayDate').textContent=now.toLocaleDateString('en-NG',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});},1000);
+const faceModal=document.getElementById('faceCheckModal');
+const faceForm=document.getElementById('faceCheckForm');
+const faceVideo=document.getElementById('faceCamera');
+const faceCanvas=document.getElementById('faceCanvas');
+const faceImage=document.getElementById('faceImage');
+const cameraStatus=document.getElementById('cameraStatus');
+const captureFace=document.getElementById('captureFace');
+const submitClockAction=document.getElementById('submitClockAction');
+let cameraStream;
+faceModal.addEventListener('show.bs.modal',async function(event){
+  const trigger=event.relatedTarget;
+  faceForm.action=trigger.dataset.clockAction;
+  document.getElementById('faceActionPrompt').textContent=`Capture a face photo before ${trigger.dataset.actionLabel.toLowerCase()}.`;
+  submitClockAction.textContent=trigger.dataset.actionLabel;
+  faceImage.value='';
+  submitClockAction.disabled=true;
+  captureFace.disabled=true;
+  cameraStatus.textContent='Starting camera...';
+  if(!navigator.mediaDevices?.getUserMedia){cameraStatus.textContent='Camera access is unavailable in this browser.';return;}
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    faceVideo.srcObject=cameraStream;
+    await faceVideo.play();
+    captureFace.disabled=false;
+    cameraStatus.textContent='Position your face in the frame.';
+  }catch(error){cameraStatus.textContent='Camera permission is required to continue.';}
+});
+captureFace.addEventListener('click',function(){
+  if(!faceVideo.videoWidth)return;
+  const scale=Math.min(1,640/faceVideo.videoWidth,480/faceVideo.videoHeight);
+  faceCanvas.width=Math.round(faceVideo.videoWidth*scale);
+  faceCanvas.height=Math.round(faceVideo.videoHeight*scale);
+  faceCanvas.getContext('2d').drawImage(faceVideo,0,0);
+  faceImage.value=faceCanvas.toDataURL('image/jpeg',0.85);
+  cameraStatus.textContent='Photo captured. Retake it or continue.';
+  submitClockAction.disabled=false;
+});
+faceModal.addEventListener('hidden.bs.modal',function(){
+  if(cameraStream)cameraStream.getTracks().forEach(track=>track.stop());
+  faceVideo.srcObject=null;
+});
+</script>{% endblock %}

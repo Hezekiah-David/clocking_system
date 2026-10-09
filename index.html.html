@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Clocking System | Plateau State Polytechnic</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts: Inter & Source Serif 4 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== DESIGN TOKENS ===== */
+    :root {
+      /* Primary palette — mature, institutional, trustworthy */
+      --primary: #0C5CAB;
+      --primary-dark: #0a4a8a;
+      --primary-light: #e8f0fe;
+      --secondary: #1e293b;
+      --accent: #10b981;
+      --accent-dark: #059669;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+
+      /* Surfaces */
+      --surface-dark: #0f172a;
+      --surface-card: #ffffff;
+      --surface-muted: #f1f5f9;
+      --surface-border: #e2e8f0;
+
+      /* Text */
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-inverse: #f8fafc;
+
+      /* Spacing & Radii */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+      --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    }
+
+    /* ===== GLOBAL RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--surface-muted);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+
+    a {
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    /* ===== NAVIGATION ===== */
+    .navbar {
+      background: rgba(15, 23, 42, 0.96) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.75rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #fff !important;
+      letter-spacing: -0.01em;
+    }
+
+    .navbar-brand .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .navbar-brand .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .navbar-brand .brand-text .brand-main {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .navbar-brand .brand-text .brand-sub {
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.7) !important;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: #fff !important;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .navbar-toggler {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 0.6rem;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(26, 39, 68, 0.78)), url('https://i.imgur.com/cq6GQU2.jpeg') center/cover no-repeat;
+      padding: 7rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(12, 92, 171, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      line-height: 1.15;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+    }
+
+    .hero-meta-item i {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .btn-hero-primary {
+      background: linear-gradient(135deg, var(--primary), #1d7fe0);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-md);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 24px rgba(12, 92, 171, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(12, 92, 171, 0.45);
+      color: #fff;
+    }
+
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.25s ease;
+    }
+
+    .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Live Clock Card in Hero */
+    .hero-clock-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-clock-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .hero-clock-card .clock-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-clock-card .clock-time {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+
+    .hero-clock-card .clock-date {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 0.5rem;
+    }
+
+    .hero-clock-card .clock-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 1.25rem auto;
+    }
+
+    .hero-clock-card .clock-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .btn-clock {
+      padding: 0.7rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-clock-in {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-clock-in:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-clock-out {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-clock-out:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 2.5rem 0;
+      position: relative;
+      z-index: 2;
+      margin-top: -2rem;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    .stat-item .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .stat-item .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== SECTION STYLES ===== */
+    .section-padding {
+      padding: 5rem 0;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.7;
+    }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-card {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      height: 100%;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: transparent;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .feature-icon.blue {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .feature-icon.green {
+      background: #d1fae5;
+      color: var(--accent-dark);
+    }
+
+    .feature-icon.amber {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .feature-icon.red {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .feature-icon.purple {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    .feature-icon.slate {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .feature-card h5 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* ===== DASHBOARD PREVIEW ===== */
+    .dashboard-preview {
+      background: var(--surface-dark);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    .dashboard-preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .dashboard-preview-header .dot-group {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dashboard-preview-header .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dashboard-preview-header .dot.red {
+      background: #ef4444;
+    }
+
+    .dashboard-preview-header .dot.amber {
+      background: #f59e0b;
+    }
+
+    .dashboard-preview-header .dot.green {
+      background: #10b981;
+    }
+
+    .dashboard-preview-header span {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .dash-stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .dash-stat-card .ds-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 0.4rem;
+    }
+
+    .dash-stat-card .ds-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .dash-stat-card .ds-change {
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .ds-change.positive {
+      color: #6ee7b7;
+    }
+
+    .ds-change.negative {
+      color: #fca5a5;
+    }
+
+    .dash-chart-area {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .dash-chart-area .chart-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      height: 80px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      min-height: 8px;
+      transition: height 0.6s ease;
+      position: relative;
+    }
+
+    .chart-bar:nth-child(2n) {
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+    }
+
+    .dash-table-area {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .dash-table-area .table-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    .dash-table {
+      width: 100%;
+      font-size: 0.78rem;
+    }
+
+    .dash-table th {
+      color: rgba(255, 255, 255, 0.35);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dash-table td {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.5rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .status-badge.present {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+    }
+
+    .status-badge.late {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+    }
+
+    .status-badge.absent {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+    }
+
+    /* ===== TECH STACK ===== */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .tech-item {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .tech-item:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .tech-item i {
+      font-size: 1.6rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .tech-item .tech-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .tech-item .tech-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ===== DOCUMENTATION ACCORDION ===== */
+    .doc-accordion .accordion-item {
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md) !important;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+      background: var(--surface-card);
+    }
+
+    .doc-accordion .accordion-button {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      background: var(--surface-card);
+      padding: 1.1rem 1.25rem;
+      border: none;
+      box-shadow: none;
+      gap: 0.75rem;
+    }
+
+    .doc-accordion .accordion-button:not(.collapsed) {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    .doc-accordion .accordion-button::after {
+      background-size: 1rem;
+    }
+
+    .doc-accordion .accordion-button .doc-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .doc-accordion .accordion-body {
+      padding: 1rem 1.25rem 1.5rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    .doc-accordion .accordion-body code {
+      background: var(--surface-muted);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--primary-dark);
+    }
+
+    /* ===== TEAM / CREDITS ===== */
+    .credit-card {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      height: 100%;
+      transition: all 0.25s ease;
+    }
+
+    .credit-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .credit-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .credit-card h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .credit-card .credit-role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .credit-card .credit-detail {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--surface-dark);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 3rem 0 1.5rem;
+    }
+
+    .footer h6 {
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .footer a {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      display: block;
+      padding: 0.25rem 0;
+    }
+
+    .footer a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 1.5rem;
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 991.98px) {
+      .hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero {
+        padding: 6rem 0 4rem;
+        min-height: auto;
+      }
+
+      .hero-clock-card {
+        margin-top: 2.5rem;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .navbar-nav {
+        padding: 1rem 0;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .hero h1 {
+        font-size: 1.85rem;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      .hero-clock-card .clock-time {
+        font-size: 2.4rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .section-padding {
+        padding: 3.5rem 0;
+      }
+
+      .stats-bar {
+        margin-top: -1.5rem;
+      }
+
+      .stat-item .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .dash-stat-card .ds-value {
+        font-size: 1.2rem;
+      }
+
+      .hero-meta {
+        gap: 1rem;
+      }
+
+      .btn-hero-primary,
+      .btn-hero-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .dashboard-preview {
+        padding: 1rem;
+      }
+
+      .dash-table {
+        font-size: 0.7rem;
+      }
+
+      .dash-table th,
+      .dash-table td {
+        padding: 0.35rem 0.3rem;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .hero-clock-card .clock-actions {
+        flex-direction: column;
+      }
+
+      .btn-clock {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <div class="brand-icon">
+          <i class="fas fa-fingerprint"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-main">ClockWise</span>
+          <span class="brand-sub">Plateau State Polytechnic</span>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#dashboard">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="#documentation">Documentation</a></li>
+          <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+            <a class="btn-hero-primary" href="/admin/" style="padding: 0.55rem 1.25rem; font-size: 0.85rem;">
+              <i class="fas fa-arrow-right-to-bracket"></i> Launch System
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <div class="hero-badge fade-up">
+            <i class="fas fa-circle" style="font-size: 0.4rem;"></i>
+            Final Year Project · ND Computer Science
+          </div>
+          <h1 class="fade-up">
+            Design & Implementation of an <span class="highlight">Employee Clocking System</span>
+          </h1>
+          <p class="fade-up">
+            A web-based attendance management solution for the Establishment Unit of Plateau State Polytechnic, Barkin Ladi. Digitally record, monitor, and report employee clock-in and clock-out times with precision and reliability.
+          </p>
+          <div class="hero-meta fade-up">
+            <div class="hero-meta-item">
+              <i class="fas fa-user-graduate"></i>
+              Jimoh Ezekiel Ayobami
+            </div>
+            <div class="hero-meta-item">
+              <i class="fas fa-id-card"></i>
+              PSP/SICT/CSC1/ND/24/122
+            </div>
+            <div class="hero-meta-item">
+              <i class="fas fa-university"></i>
+              Plateau State Polytechnic
+            </div>
+          </div>
+          <div class="d-flex flex-wrap gap-3 fade-up">
+            <a href="/admin/" class="btn-hero-primary">
+              <i class="fas fa-gauge-high"></i> View Dashboard
+            </a>
+            <a href="#documentation" class="btn-hero-secondary">
+              <i class="fas fa-book-open"></i> Read Documentation
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="hero-clock-card fade-up" style="background-image: linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.86)), url('https://i.imgur.com/Dd4adSy.jpeg'); background-size: cover; background-position: center;">
+            <div class="clock-label">Live System Clock</div>
+            <div class="clock-time" id="liveClock">--:--:--</div>
+            <div class="clock-date" id="liveDate">Loading...</div>
+            <div class="clock-divider"></div>
+            <div class="clock-actions">
+              <button class="btn-clock btn-clock-in" onclick="simulateClock('in')">
+                <i class="fas fa-arrow-right-to-bracket"></i> Clock In
+              </button>
+              <button class="btn-clock btn-clock-out" onclick="simulateClock('out')">
+                <i class="fas fa-arrow-right-from-bracket"></i> Clock Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS BAR ===== -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="row">
+        <div class="col-6 col-md-3 stat-item fade-up">
+          <div class="stat-value" data-count="450">0</div>
+          <div class="stat-label">Registered Staff</div>
+        </div>
+        <div class="col-6 col-md-3 stat-item fade-up">
+          <div class="stat-value" data-count="98">0</div>
+          <div class="stat-label">Attendance Accuracy %</div>
+        </div>
+        <div class="col-6 col-md-3 stat-item fade-up">
+          <div class="stat-value" data-count="12">0</div>
+          <div class="stat-label">Departments Covered</div>
+        </div>
+        <div class="col-6 col-md-3 stat-item fade-up">
+          <div class="stat-value" data-count="100">0</div>
+          <div class="stat-label">% Digital Records</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FEATURES SECTION ===== -->
+  <section class="section-padding" id="features">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-label fade-up">System Capabilities</div>
+        <h2 class="section-title fade-up">Everything the Establishment Unit Needs</h2>
+        <p class="section-subtitle mx-auto fade-up">
+          The system addresses the critical shortcomings of the manual attendance process, including falsification, delays in reporting, and data loss.
+        </p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 fade-up">
+          <div class="feature-card">
+            <div class="feature-icon blue">
+              <i class="fas fa-fingerprint"></i>
+            </div>
+            <h5>Digital Clock-In / Clock-Out</h5>
+            <p>Employees record their arrival and departure times electronically, eliminating manual time entries and paper registers.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-up">
+          <div class="feature-card">
+            <div class="feature-icon green">
+              <i class="fas fa-shield-halved"></i>
+            </div>
+            <h5>Anti-Buddy Punching</h5>
+            <p>Each employee has unique login credentials. The system prevents one staff member from signing in on behalf of another.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-up">
+          <div class="feature-card">
+            <div class="feature-icon amber">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h5>Automated Reports</h5>
+            <p>Generate daily, weekly, and monthly attendance summaries in minutes. Export reports for payroll and performance evaluation.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-up">
+          <div class="feature-card">
+            <div class="feature-icon red">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h5>Lateness & Absence Tracking</h5>
+            <p>Immediately detect patterns of lateness and absenteeism. Administrators receive real-time visibility of staff presence.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-up">
+          <div class="feature-card">
+            <div class="feature-icon purple">
+              <i class="fas fa-user-lock"></i>
+            </div>
+            <h5>Role-Based Access Control</h5>
+            <p>Separate dashboards for administrators and staff. Administrators manage employees, reports, and system settings.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-up">
+          <div class="feature-card">
+            <div class="feature-icon slate">
+              <i class="fas fa-database"></i>
+            </div>
+            <h5>Secure Data Storage</h5>
+            <p>All attendance records are stored in a relational database, protected against loss, damage, and tampering.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DASHBOARD PREVIEW ===== -->
+  <section class="section-padding" id="dashboard" style="background: var(--surface-card); border-top: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border);">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-5">
+          <div class="section-label fade-up">Administrative Dashboard</div>
+          <h2 class="section-title fade-up">Real-Time Attendance at a Glance</h2>
+          <p class="section-subtitle fade-up">
+            The administrative dashboard provides a comprehensive overview of staff attendance. Monitor who is present, who is late, and who is absent — all updated in real time.
+          </p>
+          <div class="mt-4 fade-up">
+            <div class="d-flex align-items-start gap-3 mb-3">
+              <div class="feature-icon blue" style="width: 36px; height: 36px; font-size: 0.85rem; margin-bottom: 0;">
+                <i class="fas fa-check"></i>
+              </div>
+              <div>
+                <h6 style="font-size: 0.9rem; margin-bottom: 0.2rem;">Live Presence Monitor</h6>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">See exactly who is currently on-site without walking to the register.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-3 mb-3">
+              <div class="feature-icon green" style="width: 36px; height: 36px; font-size: 0.85rem; margin-bottom: 0;">
+                <i class="fas fa-file-export"></i>
+              </div>
+              <div>
+                <h6 style="font-size: 0.9rem; margin-bottom: 0.2rem;">One-Click Report Generation</h6>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Produce attendance summaries for any date range instantly.</p>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-3 fade-up">
+              <div class="feature-icon amber" style="width: 36px; height: 36px; font-size: 0.85rem; margin-bottom: 0;">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div>
+                <h6 style="font-size: 0.9rem; margin-bottom: 0.2rem;">Lateness Alerts</h6>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Automatically flag employees who have not clocked in by the expected time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-7 fade-up">
+          <div class="dashboard-preview">
+            <div class="dashboard-preview-header">
+              <div class="dot-group">
+                <div class="dot red"></div>
+                <div class="dot amber"></div>
+                <div class="dot green"></div>
+              </div>
+              <span>Establishment Unit — Admin Dashboard</span>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dash-stat-card">
+                <div class="ds-label">Present Today</div>
+                <div class="ds-value">218</div>
+                <div class="ds-change positive"><i class="fas fa-arrow-up"></i> 94.2%</div>
+              </div>
+              <div class="dash-stat-card">
+                <div class="ds-label">Late Arrivals</div>
+                <div class="ds-value">7</div>
+                <div class="ds-change negative"><i class="fas fa-arrow-down"></i> 3.0%</div>
+              </div>
+              <div class="dash-stat-card">
+                <div class="ds-label">Absent</div>
+                <div class="ds-value">4</div>
+                <div class="ds-change positive"><i class="fas fa-arrow-down"></i> 1.7%</div>
+              </div>
+              <div class="dash-stat-card">
+                <div class="ds-label">On Leave</div>
+                <div class="ds-value">11</div>
+                <div class="ds-change" style="color: rgba(255,255,255,0.4);">Approved</div>
+              </div>
+            </div>
+            <div class="dash-chart-area">
+              <div class="chart-title">Weekly Attendance Trend</div>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height: 70%;"></div>
+                <div class="chart-bar" style="height: 85%;"></div>
+                <div class="chart-bar" style="height: 60%;"></div>
+                <div class="chart-bar" style="height: 90%;"></div>
+                <div class="chart-bar" style="height: 75%;"></div>
+                <div class="chart-bar" style="height: 45%;"></div>
+                <div class="chart-bar" style="height: 30%;"></div>
+              </div>
+            </div>
+            <div class="dash-table-area">
+              <div class="table-title">Recent Clock-Ins</div>
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Staff No.</th>
+                    <th>Clock In</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>J. E. Ayobami</td>
+                    <td>PSS/EST/0421</td>
+                    <td>07:58 AM</td>
+                    <td><span class="status-badge present">Present</span></td>
+                  </tr>
+                  <tr>
+                    <td>M. A. Bello</td>
+                    <td>PSS/EST/0387</td>
+                    <td>08:12 AM</td>
+                    <td><span class="status-badge late">Late</span></td>
+                  </tr>
+                  <tr>
+                    <td>G. O. Danjuma</td>
+                    <td>PSS/EST/0512</td>
+                    <td>07:45 AM</td>
+                    <td><span class="status-badge present">Present</span></td>
+                  </tr>
+                  <tr>
+                    <td>R. T. Pam</td>
+                    <td>PSS/EST/0298</td>
+                    <td>—</td>
+                    <td><span class="status-badge absent">Absent</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DOCUMENTATION ===== -->
+  <section class="section-padding" id="documentation" style="background: var(--surface-card); border-top: 1px solid var(--surface-border);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <div class="section-label fade-up">Project Documentation</div>
+          <h2 class="section-title fade-up">Explore the Full Project</h2>
+          <p class="section-subtitle fade-up">
+            Review the key sections of the project documentation, including the abstract, system design, implementation details, and testing results.
+          </p>
+          <div class="mt-4 fade-up">
+            <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.85rem; color: var(--text-secondary);">
+              <i class="fas fa-check-circle" style="color: var(--accent);"></i> Chapter One: Introduction
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.85rem; color: var(--text-secondary);">
+              <i class="fas fa-check-circle" style="color: var(--accent);"></i> Chapter Two: Literature Review
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.85rem; color: var(--text-secondary);">
+              <i class="fas fa-check-circle" style="color: var(--accent);"></i> Chapter Three: System Analysis & Design
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.85rem; color: var(--text-secondary);">
+              <i class="fas fa-check-circle" style="color: var(--accent);"></i> Chapter Four: Implementation
+            </div>
+            <div class="d-flex align-items-center gap-2 fade-up" style="font-size: 0.85rem; color: var(--text-secondary);">
+              <i class="fas fa-check-circle" style="color: var(--accent);"></i> Chapter Five: Summary & Recommendations
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="doc-accordion accordion fade-up" id="docAccordion">
+
+            <!-- Abstract -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#abstract">
+                  <span class="doc-icon" style="background: #e8f0fe; color: #0C5CAB;"><i class="fas fa-file-alt"></i></span>
+                  Abstract
+                </button>
+              </h2>
+              <div id="abstract" class="accordion-collapse collapse show" data-bs-parent="#docAccordion">
+                <div class="accordion-body">
+                  The management of employee attendance in many Nigerian polytechnic establishments relies heavily on manual paper-based processes, which are susceptible to inaccuracies, time theft, and administrative inefficiencies. This project presents the design and implementation of an Employee Clocking System for the Establishment Unit of Plateau State Polytechnic, Barkin Ladi. The study identifies the critical shortcomings of the existing manual clocking approach, including falsification of attendance records, inability to generate timely reports, and difficulty in monitoring lateness and absenteeism. The proposed system was developed using Python, the Django web framework, SQLite/MySQL, and HTML/CSS/JavaScript, all deployed on a local network server environment.
+                </div>
+              </div>
+            </div>
+
+            <!-- Statement of the Problem -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#problem">
+                  <span class="doc-icon" style="background: #fef3c7; color: #b45309;"><i class="fas fa-exclamation-triangle"></i></span>
+                  Statement of the Problem
+                </button>
+              </h2>
+              <div id="problem" class="accordion-collapse collapse" data-bs-parent="#docAccordion">
+                <div class="accordion-body">
+                  The Establishment Unit currently operates a manual attendance recording system that is inadequate for the institution's growing administrative demands. Key problems include: <strong>falsification of attendance records</strong> through buddy punching, <strong>inefficiency in report generation</strong> causing delays in payroll computation, <strong>data loss and damage</strong> due to paper vulnerabilities, <strong>difficulty in monitoring lateness and absenteeism</strong>, and a <strong>high administrative burden</strong> on records staff.
+                </div>
+              </div>
+            </div>
+
+            <!-- Aim and Objectives -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aim">
+                  <span class="doc-icon" style="background: #d1fae5; color: #059669;"><i class="fas fa-bullseye"></i></span>
+                  Aim and Objectives
+                </button>
+              </h2>
+              <div id="aim" class="accordion-collapse collapse" data-bs-parent="#docAccordion">
+                <div class="accordion-body">
+                  <strong>Aim:</strong> To design and implement a web-based Employee Clocking System for the Establishment Unit of Plateau State Polytechnic, Barkin Ladi, to improve the accuracy and efficiency of staff attendance management.<br><br>
+                  <strong>Objectives:</strong>
+                  <ul class="mt-2 mb-0">
+                    <li>To analyse the existing manual attendance system and identify its weaknesses.</li>
+                    <li>To design a database-driven system capable of recording clock-in and clock-out times electronically.</li>
+                    <li>To develop an administrative dashboard for real-time monitoring of staff punctuality.</li>
+                    <li>To implement automated report generation for daily, weekly, and monthly attendance summaries.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Design -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#design">
+                  <span class="doc-icon" style="background: #ede9fe; color: #6d28d9;"><i class="fas fa-drafting-compass"></i></span>
+                  System Design & Architecture
+                </button>
+              </h2>
+              <div id="design" class="accordion-collapse collapse" data-bs-parent="#docAccordion">
+                <div class="accordion-body">
+                  The system follows the <strong>Model-View-Template (MVT)</strong> architecture, as implemented by Django. The database schema comprises two core entities: <code>Employee</code> (with a one-to-one reference to Django's built-in User model) and <code>Attendance</code> (storing clock-in time, clock-out time, date, and status). The Entity Relationship Diagram (ERD) illustrates a one-to-many relationship: one employee can have many attendance records. Data flow diagrams (context-level and level 1) document the interaction between employees, the system, and administrators.
+                </div>
+              </div>
+            </div>
+
+            <!-- Implementation -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#implementation">
+                  <span class="doc-icon" style="background: #fee2e2; color: #b91c1c;"><i class="fas fa-code"></i></span>
+                  Implementation & Testing
+                </button>
+              </h2>
+              <div id="implementation" class="accordion-collapse collapse" data-bs-parent="#docAccordion">
+                <div class="accordion-body">
+                  The system was implemented using Python and Django, with SQLite for development and MySQL for production. Key features include secure user authentication, clock-in/clock-out logic with duplicate prevention, an administrative dashboard, and report generation. <strong>Black-box testing</strong> was conducted across 10 test cases covering valid login, invalid login, clock-in, duplicate clock-in, clock-out, clock-out without clock-in, report generation, employee management, and blank form submission. <strong>All 10 test cases passed successfully.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Source Code -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#code">
+                  <span class="doc-icon" style="background: #e2e8f0; color: #334155;"><i class="fas fa-file-code"></i></span>
+                  Key Source Code Snippets
+                </button>
+              </h2>
+              <div id="code" class="accordion-collapse collapse" data-bs-parent="#docAccordion">
+                <div class="accordion-body">
+                  <strong>Database Configuration (<code>settings.py</code>):</strong>
+                  <pre class="mt-2 mb-3" style="background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; font-size: 0.78rem; overflow-x: auto;">DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'clocking_db.sqlite3',
+    }
+}</pre>
+                  <strong>Clock-In Logic (<code>views.py</code>):</strong>
+                  <pre class="mt-2" style="background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; font-size: 0.78rem; overflow-x: auto;">@login_required
+def clock_in(request):
+    employee = request.user.employee
+    today = timezone.now().date()
+    if Attendance.objects.filter(employee=employee, attendance_date=today).exists():
+        return HttpResponse("You have already clocked in today.")
+    Attendance.objects.create(
+        employee=employee,
+        clock_in_time=timezone.now(),
+        attendance_date=today,
+        status='present'
+    )
+    return HttpResponse("Clock-in successful!")</pre>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CREDITS SECTION ===== -->
+  <section class="section-padding" id="credits">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-label fade-up">Project Team</div>
+        <h2 class="section-title fade-up">Credits & Acknowledgements</h2>
+      </div>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-4 col-lg-3 fade-up">
+          <div class="credit-card">
+            <div class="credit-avatar">JA</div>
+            <h5>Jimoh Ezekiel Ayobami</h5>
+            <div class="credit-role">Student Developer</div>
+            <div class="credit-detail">Matric No: PSP/SICT/CSC1/ND/24/122<br>ND Computer Science</div>
+          </div>
+        </div>
+        <div class="col-md-4 col-lg-3 fade-up">
+          <div class="credit-card">
+            <div class="credit-avatar" style="background: linear-gradient(135deg, #1e293b, #0C5CAB);">SV</div>
+            <h5>Project Supervisor</h5>
+            <div class="credit-role">Department of Computer Science</div>
+            <div class="credit-detail">Plateau State Polytechnic, Barkin Ladi</div>
+          </div>
+        </div>
+        <div class="col-md-4 col-lg-3 fade-up">
+          <div class="credit-card">
+            <div class="credit-avatar" style="background: linear-gradient(135deg, #059669, #10b981);">EU</div>
+            <h5>Establishment Unit</h5>
+            <div class="credit-role">Case Study Institution</div>
+            <div class="credit-detail">Plateau State Polytechnic, Barkin Ladi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="brand-icon" style="width: 34px; height: 34px; font-size: 0.9rem;">
+              <i class="fas fa-fingerprint"></i>
+            </div>
+            <div>
+              <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">ClockWise</div>
+              <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em;">Employee Clocking System</div>
+            </div>
+          </div>
+          <p style="font-size: 0.82rem; max-width: 320px;">
+            A web-based attendance management solution designed for the Establishment Unit of Plateau State Polytechnic, Barkin Ladi.
+          </p>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h6>Navigation</h6>
+          <a href="#home">Home</a>
+          <a href="#features">Features</a>
+          <a href="#dashboard">Dashboard</a>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h6>Documentation</h6>
+          <a href="#documentation">Abstract</a>
+          <a href="#documentation">System Design</a>
+          <a href="#documentation">Implementation</a>
+          <a href="#documentation">Testing</a>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h6>Institution</h6>
+          <a href="#">Plateau State Polytechnic</a>
+          <a href="#">Establishment Unit</a>
+          <a href="#">Dept. of Computer Science</a>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h6>Project Info</h6>
+          <a href="#">ND Final Year Project</a>
+          <a href="#">2026</a>
+          <a href="#">Matric: PSP/SICT/CSC1/ND/24/122</a>
+        </div>
+      </div>
+      <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <span>&copy; 2026 Jimoh Ezekiel Ayobami. All rights reserved.</span>
+        <span>Design & Implementation of an Employee Clocking System</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ===== LIVE CLOCK =====
+    function updateClock() {
+      const now = new Date();
+      const timeEl = document.getElementById('liveClock');
+      const dateEl = document.getElementById('liveDate');
+
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      dateEl.textContent = now.toLocaleDateString('en-NG', options);
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ===== SIMULATED CLOCK ACTIONS =====
+    function simulateClock(type) {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-NG');
+      const btn = event.currentTarget;
+
+      if (type === 'in') {
+        btn.innerHTML = '<i class="fas fa-check"></i> Clocked In';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Clock In';
+          btn.style.background = '';
+        }, 2500);
+      } else {
+        btn.innerHTML = '<i class="fas fa-check"></i> Clocked Out';
+        btn.style.background = '#0C5CAB';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fas fa-arrow-right-from-bracket"></i> Clock Out';
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 2500);
+      }
+    }
+
+    // ===== NAVBAR SCROLL EFFECT =====
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // ===== SCROLL ANIMATIONS (Intersection Observer) =====
+    const observerOptions = {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ===== STAT COUNTER ANIMATION =====
+    function animateCounters() {
+      const counters = document.querySelectorAll('[data-count]');
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const duration = 1800;
+        const start = performance.now();
+        const startVal = 0;
+
+        function update(currentTime) {
+          const elapsed = currentTime - start;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease out cubic
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.floor(startVal + (target - startVal) * eased);
+          counter.textContent = current;
+
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            counter.textContent = target;
+          }
+        }
+
+        requestAnimationFrame(update);
+      });
+    }
+
+    // Trigger counter animation when stats bar is visible
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounters();
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const statsBar = document.querySelector('.stats-bar');
+    if (statsBar) statsObserver.observe(statsBar);
+
+    // ===== SMOOTH SCROLL FOR NAV LINKS =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          const navHeight = nav.offsetHeight;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+          window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+          // Close mobile menu if open
+          const navCollapse = document.getElementById('navMenu');
+          if (navCollapse.classList.contains('show')) {
+            const bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
+            if (bsCollapse) bsCollapse.hide();
+          }
+        }
+      });
+    });
+
+    // ===== ACTIVE NAV LINK ON SCROLL =====
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      const scrollPos = window.scrollY + 200;
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
