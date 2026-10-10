@@ -15,7 +15,10 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         "ALLOWED_HOSTS",
-        "'.onrender.com', 'localhost', '127.0.0.1'"
+        'clocking-system-4cav.onrender.com',
+    '.onrender.com',
+    'localhost',
+    '127.0.0.1',
     ).split(",")
     if host.strip()
 ]
